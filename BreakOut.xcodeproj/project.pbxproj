@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		32DD13A41C619A5400B75B46 /* BreakOutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32DD13A31C619A5400B75B46 /* BreakOutView.swift */; };
+		DC181FA11C62ADEE008C2163 /* DemoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC181FA01C62ADEE008C2163 /* DemoTableViewController.swift */; };
 		DCDD20A01C615C580098530F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCDD209F1C615C580098530F /* AppDelegate.swift */; };
 		DCDD20A51C615C580098530F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DCDD20A31C615C580098530F /* Main.storyboard */; };
 		DCDD20A71C615C580098530F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DCDD20A61C615C580098530F /* Assets.xcassets */; };
@@ -15,6 +15,8 @@
 		DCDD20B51C615C580098530F /* BreakOutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCDD20B41C615C580098530F /* BreakOutTests.swift */; };
 		DCDD20C01C615C580098530F /* BreakOutUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCDD20BF1C615C580098530F /* BreakOutUITests.swift */; };
 		DCDD20CE1C615C7D0098530F /* BreakOutScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCDD20CD1C615C7D0098530F /* BreakOutScene.swift */; };
+		DCDD214C1C62945A0098530F /* StartScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCDD214B1C62945A0098530F /* StartScene.swift */; };
+		DCDD214E1C629C700098530F /* BreakOutToRefrehView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCDD214D1C629C700098530F /* BreakOutToRefrehView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,7 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		32DD13A31C619A5400B75B46 /* BreakOutView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BreakOutView.swift; sourceTree = "<group>"; };
+		DC181FA01C62ADEE008C2163 /* DemoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoTableViewController.swift; sourceTree = "<group>"; };
 		DCDD209C1C615C580098530F /* BreakOut.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BreakOut.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCDD209F1C615C580098530F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DCDD20A41C615C580098530F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -49,6 +51,8 @@
 		DCDD20BF1C615C580098530F /* BreakOutUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreakOutUITests.swift; sourceTree = "<group>"; };
 		DCDD20C11C615C580098530F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DCDD20CD1C615C7D0098530F /* BreakOutScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BreakOutScene.swift; sourceTree = "<group>"; };
+		DCDD214B1C62945A0098530F /* StartScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StartScene.swift; sourceTree = "<group>"; };
+		DCDD214D1C629C700098530F /* BreakOutToRefrehView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BreakOutToRefrehView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,7 +109,9 @@
 				DCDD20A81C615C580098530F /* LaunchScreen.storyboard */,
 				DCDD20AB1C615C580098530F /* Info.plist */,
 				DCDD20CD1C615C7D0098530F /* BreakOutScene.swift */,
-				32DD13A31C619A5400B75B46 /* BreakOutView.swift */,
+				DCDD214B1C62945A0098530F /* StartScene.swift */,
+				DCDD214D1C629C700098530F /* BreakOutToRefrehView.swift */,
+				DC181FA01C62ADEE008C2163 /* DemoTableViewController.swift */,
 			);
 			path = BreakOut;
 			sourceTree = "<group>";
@@ -263,8 +269,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				DCDD20CE1C615C7D0098530F /* BreakOutScene.swift in Sources */,
-				32DD13A41C619A5400B75B46 /* BreakOutView.swift in Sources */,
+				DCDD214E1C629C700098530F /* BreakOutToRefrehView.swift in Sources */,
+				DC181FA11C62ADEE008C2163 /* DemoTableViewController.swift in Sources */,
 				DCDD20A01C615C580098530F /* AppDelegate.swift in Sources */,
+				DCDD214C1C62945A0098530F /* StartScene.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

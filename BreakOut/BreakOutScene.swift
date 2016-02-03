@@ -9,9 +9,10 @@
 import SpriteKit
 
 class BreakOutScene: SKScene, SKPhysicsContactDelegate {
-    let ballName = "Ball"
-    let paddleName = "Paddle"
-    let blockName = "Block"
+    let ballName = "ball"
+    let paddleName = "paddle"
+    let blockName = "block"
+    let backgroundLabelName = "backgroundLabel"
     
     let ballCategory   : UInt32 = 0x1 << 0
     let backCategory : UInt32 = 0x1 << 1
@@ -19,23 +20,44 @@ class BreakOutScene: SKScene, SKPhysicsContactDelegate {
     let paddleCategory : UInt32 = 0x1 << 3
     
     var contentCreated = false
-    var isStart = false
+    var isStarted = false
     
-    var sceneBackgroundColor: UIColor!
+    var scenebackgroundColor: UIColor!
+    var textColor: UIColor!
     var paddleColor: UIColor!
     var ballColor: UIColor!
+    var blockColors: [UIColor]!
     
     override func didMoveToView(view: SKView) {
         super.didMoveToView(view)
         if !contentCreated {
             createSceneContents()
+            contentCreated = true
+        }
+    }
+    
+    override func update(currentTime: NSTimeInterval) {
+        guard let ball = self.childNodeWithName(ballName) as? SKSpriteNode,
+            let physicsBody = ball.physicsBody else {
+                return;
+        }
+        
+        let maxSpeed: CGFloat = 600.0
+        let speed = sqrt(physicsBody.velocity.dx * physicsBody.velocity.dx + physicsBody.velocity.dy * physicsBody.velocity.dy)
+        
+        if speed > maxSpeed {
+            physicsBody.linearDamping = 0.4
+        }
+        else {
+            physicsBody.linearDamping = 0.0
         }
     }
     
     func createSceneContents() {
-        physicsWorld.gravity = CGVectorMake(0, 0)
+        physicsWorld.gravity = CGVectorMake(0.0, 0.0)
         physicsWorld.contactDelegate = self
-        backgroundColor = self.sceneBackgroundColor
+        
+        backgroundColor = scenebackgroundColor
         scaleMode = .AspectFit
         
         physicsBody = SKPhysicsBody(edgeLoopFromRect: frame)
@@ -44,73 +66,82 @@ class BreakOutScene: SKScene, SKPhysicsContactDelegate {
         name = "scene"
         
         let back = SKNode()
-        back.physicsBody = SKPhysicsBody(edgeFromPoint: CGPointMake(0, 1), toPoint: CGPointMake(frame.size.width, 1))
+        back.physicsBody = SKPhysicsBody(edgeFromPoint: CGPointMake(frame.size.width - 1, 0),
+            toPoint: CGPointMake(frame.size.width - 1, frame.size.height))
         back.physicsBody?.categoryBitMask = backCategory
         addChild(back)
         
+        createLoadingLabelNode()
         
         let paddle = createPaddle()
-        paddle.position = CGPoint(x: CGRectGetMidX(frame), y: 30)
+        paddle.position = CGPoint(x: frame.size.width-30.0, y: CGRectGetMidY(frame))
         addChild(paddle)
         
         createBall()
         createBlocks()
         
-        contentCreated = true
     }
     
     func createPaddle() -> SKSpriteNode {
-        let paddle = SKSpriteNode(color: paddleColor, size: CGSize(width: 30, height: 5))
+        let paddle = SKSpriteNode(color: paddleColor, size: CGSize(width: 5, height: 30))
         
         paddle.physicsBody = SKPhysicsBody(rectangleOfSize: paddle.size)
         paddle.physicsBody?.dynamic = false
         paddle.physicsBody?.restitution = 1.0
         paddle.physicsBody?.friction = 0.0
+        
         paddle.name = paddleName
         
         return paddle
     }
     
     func createBlocks() {
-        let rowCount = Int(arc4random_uniform(4))+4
-        for i in 0..<rowCount {
-            let color = UIColor(white: CGFloat(i) * 0.8 / CGFloat(rowCount), alpha: 1)
+        for i in 0..<3 {
+            var color = blockColors.count > 0 ? blockColors[0] : UIColor(white: 0.2, alpha: 1.0)
+            if i == 1 {
+                color = blockColors.count > 1 ? blockColors[1] : UIColor(white: 0.4, alpha: 1.0)
+            } else if i == 2 {
+                color = blockColors.count > 2 ? blockColors[2] : UIColor(white: 0.6, alpha: 1.0)
+            }
             
-            let columnCount = Int(arc4random_uniform(5))+10
-            let blockWidth = ((frame.width) - CGFloat(columnCount-1))/CGFloat(columnCount)
-            let blockHeigth:CGFloat = 5.0
-            for j in 0..<columnCount {
-                let block = SKSpriteNode(color: color, size: CGSize(width: blockWidth, height: blockHeigth))
-                block.position = CGPointMake(1 + CGFloat(j) * (blockWidth + 1), (frame.height) - 20 - CGFloat(i) * (blockHeigth + 1))
+            for j in 0..<5 {
+                let block = SKSpriteNode(color: color, size: CGSize(width: 5, height: 19))
+                block.position = CGPoint(x: 20+CGFloat(i)*6, y: CGFloat(j)*20 + 10)
                 block.name = blockName
                 block.physicsBody = SKPhysicsBody(rectangleOfSize: block.size)
+                
+                block.physicsBody?.categoryBitMask = blockCategory
                 block.physicsBody?.allowsRotation = false
                 block.physicsBody?.restitution = 1.0
                 block.physicsBody?.friction = 0.0
                 block.physicsBody?.dynamic = false
                 
                 addChild(block)
-                
             }
         }
     }
     
     func removeBlocks() {
-        while((childNodeWithName(blockName)) != nil) {
-            childNodeWithName(blockName)?.removeFromParent()
+        var node = childNodeWithName(blockName)
+        while (node != nil) {
+            node?.removeFromParent()
+            node = childNodeWithName(blockName)
         }
     }
     
     func createBall() {
         let ball = SKSpriteNode(color: ballColor, size: CGSize(width: 8, height: 8))
-        ball.name = ballName
-        ball.position = CGPointMake(frame.width * CGFloat(arc4random()) / CGFloat(UINT32_MAX), 30 + ball.frame.width)
         
-        ball.physicsBody = SKPhysicsBody(circleOfRadius: ball.frame.height/2)
+        
+        ball.position = CGPoint(x: frame.size.width - 30.0 - ball.size.width, y: CGRectGetHeight(frame)*CGFloat(arc4random())/CGFloat(UINT32_MAX))
+        ball.name = ballName
+        
+        ball.physicsBody = SKPhysicsBody(circleOfRadius: ceil(ball.size.width/2.0))
         ball.physicsBody?.usesPreciseCollisionDetection = true
         ball.physicsBody?.categoryBitMask = ballCategory
         ball.physicsBody?.contactTestBitMask = blockCategory | paddleCategory | backCategory
         ball.physicsBody?.allowsRotation = false
+        
         ball.physicsBody?.linearDamping = 0.0
         ball.physicsBody?.restitution = 1.0
         ball.physicsBody?.friction = 0.0
@@ -118,65 +149,76 @@ class BreakOutScene: SKScene, SKPhysicsContactDelegate {
         addChild(ball)
     }
     
-    func removeball() {
+    func removeBall() {
         if let ball = childNodeWithName(ballName) {
             ball.removeFromParent()
         }
     }
     
+    func createLoadingLabelNode() {
+        let loadingLabelNode = SKLabelNode(text: "Loading...")
+        loadingLabelNode.fontColor = textColor
+        loadingLabelNode.fontSize = 20
+        loadingLabelNode.position = CGPoint(x: CGRectGetMidX(frame), y: CGRectGetMidY(frame))
+        loadingLabelNode.name = backgroundLabelName
+        
+        addChild(loadingLabelNode)
+    }
+    
     func reset() {
         removeBlocks()
-        removeball()
         createBlocks()
+        removeBall()
         createBall()
     }
     
     func start() {
-        isStart = true
-        if let ball = childNodeWithName(ballName) {
-            ball.physicsBody?.applyImpulse(CGVectorMake(0.2, -0.5))
+        isStarted = true
+        
+        let ball = childNodeWithName(ballName)
+        ball?.physicsBody?.applyImpulse(CGVector(dx: -0.5, dy: 0.2))
+    }
+    
+    func updateLabel(text: String) {
+        if let label: SKLabelNode = childNodeWithName(backgroundLabelName) as? SKLabelNode {
+            label.text = text
         }
     }
     
     func moveHandle(value: CGFloat) {
-        if let paddle = childNodeWithName(paddleName) {
-            paddle.position.x = value
-        }
-    }
-    
-    func isGameWon() -> Bool {
-        if let _ = childNodeWithName(blockName) {
-            return false
-        }
-        return true
+        let paddle = childNodeWithName(paddleName)
+        
+        paddle?.position.y = value
     }
     
     func didEndContact(contact: SKPhysicsContact) {
         var ballBody: SKPhysicsBody?
         var otherBody: SKPhysicsBody?
-        if contact.bodyA.contactTestBitMask > contact.bodyB.contactTestBitMask {
-            otherBody = contact.bodyA
-            ballBody = contact.bodyB
-        }else {
-            otherBody = contact.bodyB
+        
+        if contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask {
             ballBody = contact.bodyA
+            otherBody = contact.bodyB
+        } else {
+            ballBody = contact.bodyB
+            otherBody = contact.bodyA
         }
         
-        if (otherBody?.contactTestBitMask ?? 0) == backCategory {
+        if ((otherBody?.categoryBitMask ?? 0) == backCategory) {
             reset()
             start()
-        } else if otherBody!.contactTestBitMask & ballCategory != 0 {
-            let minVelocity = CGFloat(20)
+        } else if ballBody!.categoryBitMask & ballCategory != 0 {
+            let minimalXVelocity = CGFloat(20.0)
+            let minimalYVelocity = CGFloat(20.0)
             var velocity = ballBody!.velocity as CGVector
-            if velocity.dy < minVelocity && velocity.dy >= 0 {
-                velocity.dy = minVelocity + 1
-            } else if velocity.dy < 0 && velocity.dy > -minVelocity {
-                velocity.dy = -minVelocity - 1
+            if velocity.dx > -minimalXVelocity && velocity.dx <= 0 {
+                velocity.dx = -minimalXVelocity-1
+            } else if velocity.dx > 0 && velocity.dx < minimalXVelocity {
+                velocity.dx = minimalXVelocity+1
             }
-            if velocity.dx <= 0 && velocity.dx > -minVelocity {
-                velocity.dx = minVelocity + 1
-            } else if velocity.dx > 0 && velocity.dx < minVelocity {
-                velocity.dx = -minVelocity - 1
+            if velocity.dy > -minimalYVelocity && velocity.dy <= 0 {
+                velocity.dy = -minimalYVelocity-1
+            } else if velocity.dy > 0 && velocity.dy < minimalYVelocity {
+                velocity.dy = minimalYVelocity+1
             }
             ballBody?.velocity = velocity
         }
@@ -190,11 +232,13 @@ class BreakOutScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
-    
-    
-    
-    
-
+    func isGameWon() -> Bool {
+        var numberOfBricks = 0
+        self.enumerateChildNodesWithName(blockName) { node, stop in
+            numberOfBricks = numberOfBricks + 1
+        }
+        return numberOfBricks == 0
+    }
 }
 
 
