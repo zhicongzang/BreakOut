@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		32DD13A41C619A5400B75B46 /* BreakOutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32DD13A31C619A5400B75B46 /* BreakOutView.swift */; };
 		DCDD20A01C615C580098530F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCDD209F1C615C580098530F /* AppDelegate.swift */; };
-		DCDD20A21C615C580098530F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCDD20A11C615C580098530F /* ViewController.swift */; };
 		DCDD20A51C615C580098530F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DCDD20A31C615C580098530F /* Main.storyboard */; };
 		DCDD20A71C615C580098530F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DCDD20A61C615C580098530F /* Assets.xcassets */; };
 		DCDD20AA1C615C580098530F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DCDD20A81C615C580098530F /* LaunchScreen.storyboard */; };
@@ -35,9 +35,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		32DD13A31C619A5400B75B46 /* BreakOutView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BreakOutView.swift; sourceTree = "<group>"; };
 		DCDD209C1C615C580098530F /* BreakOut.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BreakOut.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCDD209F1C615C580098530F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		DCDD20A11C615C580098530F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		DCDD20A41C615C580098530F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		DCDD20A61C615C580098530F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DCDD20A91C615C580098530F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -100,12 +100,12 @@
 			isa = PBXGroup;
 			children = (
 				DCDD209F1C615C580098530F /* AppDelegate.swift */,
-				DCDD20A11C615C580098530F /* ViewController.swift */,
 				DCDD20A31C615C580098530F /* Main.storyboard */,
 				DCDD20A61C615C580098530F /* Assets.xcassets */,
 				DCDD20A81C615C580098530F /* LaunchScreen.storyboard */,
 				DCDD20AB1C615C580098530F /* Info.plist */,
 				DCDD20CD1C615C7D0098530F /* BreakOutScene.swift */,
+				32DD13A31C619A5400B75B46 /* BreakOutView.swift */,
 			);
 			path = BreakOut;
 			sourceTree = "<group>";
@@ -263,7 +263,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DCDD20CE1C615C7D0098530F /* BreakOutScene.swift in Sources */,
-				DCDD20A21C615C580098530F /* ViewController.swift in Sources */,
+				32DD13A41C619A5400B75B46 /* BreakOutView.swift in Sources */,
 				DCDD20A01C615C580098530F /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -489,6 +489,7 @@
 				DCDD20C61C615C580098530F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		DCDD20C71C615C580098530F /* Build configuration list for PBXNativeTarget "BreakOutTests" */ = {
 			isa = XCConfigurationList;
@@ -497,6 +498,7 @@
 				DCDD20C91C615C580098530F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		DCDD20CA1C615C580098530F /* Build configuration list for PBXNativeTarget "BreakOutUITests" */ = {
 			isa = XCConfigurationList;
@@ -505,6 +507,7 @@
 				DCDD20CC1C615C580098530F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

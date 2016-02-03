@@ -12,7 +12,6 @@ class BreakOutScene: SKScene, SKPhysicsContactDelegate {
     let ballName = "Ball"
     let paddleName = "Paddle"
     let blockName = "Block"
-    let backgroundLabelName = "BackgroundLabel"
     
     let ballCategory   : UInt32 = 0x1 << 0
     let backCategory : UInt32 = 0x1 << 1
@@ -23,7 +22,6 @@ class BreakOutScene: SKScene, SKPhysicsContactDelegate {
     var isStart = false
     
     var sceneBackgroundColor: UIColor!
-    var textColor: UIColor!
     var paddleColor: UIColor!
     var ballColor: UIColor!
     
@@ -50,7 +48,6 @@ class BreakOutScene: SKScene, SKPhysicsContactDelegate {
         back.physicsBody?.categoryBitMask = backCategory
         addChild(back)
         
-        createLoadingLabelNode()
         
         let paddle = createPaddle()
         paddle.position = CGPoint(x: CGRectGetMidX(frame), y: 30)
@@ -80,11 +77,11 @@ class BreakOutScene: SKScene, SKPhysicsContactDelegate {
             let color = UIColor(white: CGFloat(i) * 0.8 / CGFloat(rowCount), alpha: 1)
             
             let columnCount = Int(arc4random_uniform(5))+10
-            let blockWidth = ((self.view?.frame.width)! - CGFloat(columnCount-1))/CGFloat(columnCount)
+            let blockWidth = ((frame.width) - CGFloat(columnCount-1))/CGFloat(columnCount)
             let blockHeigth:CGFloat = 5.0
             for j in 0..<columnCount {
                 let block = SKSpriteNode(color: color, size: CGSize(width: blockWidth, height: blockHeigth))
-                block.position = CGPointMake(1 + CGFloat(j) * (blockWidth + 1), (self.view?.frame.height)! - 20 - CGFloat(i) * (blockHeigth + 1))
+                block.position = CGPointMake(1 + CGFloat(j) * (blockWidth + 1), (frame.height) - 20 - CGFloat(i) * (blockHeigth + 1))
                 block.name = blockName
                 block.physicsBody = SKPhysicsBody(rectangleOfSize: block.size)
                 block.physicsBody?.allowsRotation = false
@@ -98,9 +95,100 @@ class BreakOutScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
+    func removeBlocks() {
+        while((childNodeWithName(blockName)) != nil) {
+            childNodeWithName(blockName)?.removeFromParent()
+        }
+    }
     
+    func createBall() {
+        let ball = SKSpriteNode(color: ballColor, size: CGSize(width: 8, height: 8))
+        ball.name = ballName
+        ball.position = CGPointMake(frame.width * CGFloat(arc4random()) / CGFloat(UINT32_MAX), 30 + ball.frame.width)
+        
+        ball.physicsBody = SKPhysicsBody(circleOfRadius: ball.frame.height/2)
+        ball.physicsBody?.usesPreciseCollisionDetection = true
+        ball.physicsBody?.categoryBitMask = ballCategory
+        ball.physicsBody?.contactTestBitMask = blockCategory | paddleCategory | backCategory
+        ball.physicsBody?.allowsRotation = false
+        ball.physicsBody?.linearDamping = 0.0
+        ball.physicsBody?.restitution = 1.0
+        ball.physicsBody?.friction = 0.0
+        
+        addChild(ball)
+    }
     
+    func removeball() {
+        if let ball = childNodeWithName(ballName) {
+            ball.removeFromParent()
+        }
+    }
     
+    func reset() {
+        removeBlocks()
+        removeball()
+        createBlocks()
+        createBall()
+    }
+    
+    func start() {
+        isStart = true
+        if let ball = childNodeWithName(ballName) {
+            ball.physicsBody?.applyImpulse(CGVectorMake(0.2, -0.5))
+        }
+    }
+    
+    func moveHandle(value: CGFloat) {
+        if let paddle = childNodeWithName(paddleName) {
+            paddle.position.x = value
+        }
+    }
+    
+    func isGameWon() -> Bool {
+        if let _ = childNodeWithName(blockName) {
+            return false
+        }
+        return true
+    }
+    
+    func didEndContact(contact: SKPhysicsContact) {
+        var ballBody: SKPhysicsBody?
+        var otherBody: SKPhysicsBody?
+        if contact.bodyA.contactTestBitMask > contact.bodyB.contactTestBitMask {
+            otherBody = contact.bodyA
+            ballBody = contact.bodyB
+        }else {
+            otherBody = contact.bodyB
+            ballBody = contact.bodyA
+        }
+        
+        if (otherBody?.contactTestBitMask ?? 0) == backCategory {
+            reset()
+            start()
+        } else if otherBody!.contactTestBitMask & ballCategory != 0 {
+            let minVelocity = CGFloat(20)
+            var velocity = ballBody!.velocity as CGVector
+            if velocity.dy < minVelocity && velocity.dy >= 0 {
+                velocity.dy = minVelocity + 1
+            } else if velocity.dy < 0 && velocity.dy > -minVelocity {
+                velocity.dy = -minVelocity - 1
+            }
+            if velocity.dx <= 0 && velocity.dx > -minVelocity {
+                velocity.dx = minVelocity + 1
+            } else if velocity.dx > 0 && velocity.dx < minVelocity {
+                velocity.dx = -minVelocity - 1
+            }
+            ballBody?.velocity = velocity
+        }
+        
+        if let body = otherBody where (body.categoryBitMask & blockCategory != 0) && body.categoryBitMask == blockCategory {
+            body.node?.removeFromParent()
+            if isGameWon() {
+                reset()
+                start()
+            }
+        }
+    }
     
     
     
